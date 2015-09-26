@@ -1,0 +1,4 @@
+rewriteengine on
+rewritecond %{REQUEST_FILENAME} !-f
+rewritecond %{REQUEST_FILENAME} !-d
+rewriterule ^(.*)$ index.php?route=$1 [QSA]

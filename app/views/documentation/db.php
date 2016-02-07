@@ -62,6 +62,8 @@ The table name is automatically derived from the model name, so naming your mode
 <pre class="prettyprint">
 $db = $this->core->loadService('db', 'db/user');
 $data = $db->select($id); // $id == primary key value
+$users = $db->select(); // select all users
+$usersNamedJoe = $db->select(array('name'=>'joe')); // select * from user where name = 'joe';
 
 $userModel = $this->core->loadModel('db/user');
 $userModel->user = 'JohnDoe':

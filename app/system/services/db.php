@@ -17,8 +17,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
-require_once 'db/iDbAccess.php';
-require_once 'db/mysql.php';
 
 class db extends modelBuilder
 {
@@ -29,6 +27,9 @@ class db extends modelBuilder
 
 	public function constructor($model=null)
 	{
+		require_once 'db/iDbAccess.php';
+		require_once 'db/mysql.php';
+		
 		$config = $this->getConfig();
 
 		if(db::$_dbo == null)
@@ -68,7 +69,7 @@ class db extends modelBuilder
 		return $statement->fetchAll(PDO::FETCH_CLASS, get_class($this->getModel()));
 	}
 
-	public function select($where)
+	public function select($where = null)
 	{
 		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
 

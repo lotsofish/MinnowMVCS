@@ -22,6 +22,24 @@ class exampleController extends controller
 	}
 }
 </pre>
+<p>
+	The object passed to the load() method must be an object that extends 'model'. If you have an array of models, you will need to place them within a new model for your view. 
+	Any model objects nested inside of other models will be handled correctly for HTML encoding.
+</p>
+
+<pre class="prettyprint">
+&lt;?php
+	$db = $this->core->loadService('db', 'db/user');
+	$users = $db->select();
+
+	// this will not work, because $users is an array of userModel
+	// $this->load($users)->show();
+
+	// you must create a new model for your view and add users
+	$myView = $this->core->loadModel('myView');
+	$myView->users = $users;
+	$this->load($myView)->show();
+</pre>
 
 <em>The View file</em>
 <pre class="prettyprint">

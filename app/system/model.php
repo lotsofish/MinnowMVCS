@@ -38,13 +38,40 @@ class model
 				}
 			}
 		}
-
+		
 		foreach($this->_rawData as $propertyName => $propertyValue)
 		{
-			$this->$propertyName = htmlentities($propertyValue, ENT_QUOTES);
+			$this->$propertyName = $this->_htmlEncodeRecursive($propertyValue);
 		}
 
 		return $this;
+	}
+
+	private function _htmlEncodeRecursive($data) 
+	{
+	    if (is_array($data)) 
+	    {
+	        foreach ( $data as $key => $value ) 
+	        {
+	            $data[$key] = $this->_htmlEncodeRecursive($value);
+	        }
+	    } 
+	    else if (is_object($data)) 
+	    {
+	        $values = get_object_vars($data);
+	        if(is_a($data, 'model')) { $data = $data->htmlEncoded(); }
+	        else
+	        {
+		        foreach ( $values as $key => $value ) 
+		        {
+		            $data->{$key} = $this->_htmlEncodeRecursive($value);
+		        }
+		    }
+	    } else 
+	    {
+	        $data = htmlentities($data, ENT_QUOTES);;
+	    }
+	    return $data;
 	}
 
 	public function raw($propertyName)

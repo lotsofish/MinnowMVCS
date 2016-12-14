@@ -63,6 +63,11 @@ class view
 		return $this;
 	}
 
+	public function getTemplateModel()
+	{
+		return $this->_templateModel;
+	}
+
 	public function title($title)
 	{
 		$this->_templateModel->title = $title;

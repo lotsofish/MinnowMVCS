@@ -34,4 +34,14 @@ class indexController extends controller
 		// loads the model into the view, sets the title and shows the view
 		$this->view->load($exampleService->getModel())->title('Example')->show();
 	}
+
+	public function test()
+	{
+		$db = $this->core->loadService('db', 'db/user');
+		$users = $db->select();
+		$testModel = $this->core->loadModel('test');
+		$testModel->users = $users;
+		$testModel->user1 = $users[3];
+		$this->view->load($testModel)->show();
+	}
 }

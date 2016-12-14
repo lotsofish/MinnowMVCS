@@ -18,8 +18,8 @@
  ***********************************************************************/
     
 $dbConfig = array(
-	'connectionString' => 'mysql:dbname=dbname;host=localhost',
-	'user' => 'username',
-	'pass' => 'password',
+	'connectionString' => 'mysql:dbname=test;host=localhost',
+	'user' => 'test',
+	'pass' => 'test',
 	'driverOptions' => null
 );

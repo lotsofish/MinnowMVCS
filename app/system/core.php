@@ -21,7 +21,7 @@ class core
 {
 	private $_rootDir;
 
-	function __construct($rootDir)
+	function __construct($rootDir, $autoLoadLibraries)
 	{
 		$this->_rootDir = $rootDir;
 
@@ -32,6 +32,18 @@ class core
 		require_once 'partialView.php';
 		require_once 'modelBuilder.php';
 		require_once 'configurable.php';
+
+		// preload template model 
+		$this->_requireFile('models/template');
+
+		// autoloaded libraries
+		if(is_array($autoLoadLibraries) && count($autoLoadLibraries) > 0)
+		{
+			foreach($autoLoadLibraries as $libraryFile)
+			{
+				$this->_requireFile('library/' . $libraryFile);
+			}
+		}
 	}
 
 	public function loadController($route)
@@ -97,7 +109,11 @@ class core
 		}
 		else
 		{
-			throw new Exception('Requested file not found: ' . $fileName . '.php');
+			$exception = new Exception('Requested file not found: ' . $fileName . '.php - Looked in (' . $systemLocation . ', ' . $userLocation . ')');
+			echo '<pre>';
+			var_dump($exception);
+			echo '</pre>';
+			throw $exception;
 		}
 	}
 }

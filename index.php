@@ -25,9 +25,16 @@
 
 $appLocation = 'app';
 
+/***
+ *** array of files that will be automatically loaded
+ *** these files are located in the library folder
+ ***/
+
+$autoLoadLibraries = array();
+
 /*** load the app ***/
 
 require_once $appLocation . '/system/core.php';
 
-$core = new core($appLocation);
+$core = new core($appLocation, $autoLoadLibraries);
 $core->loadController(isset($_GET['route']) ? $_GET['route'] : '');

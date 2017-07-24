@@ -24,6 +24,7 @@ class db extends modelBuilder
 	private static $_dbo;
 	private $_database;
 	private $_primaryKey;
+	private $_lastQuery;
 
 	public function constructor($model=null)
 	{
@@ -65,7 +66,17 @@ class db extends modelBuilder
 		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
 
 		$statement = db::$_dbo->prepare($query);
-		$statement->execute($parameters);
+		if(!$statement->execute($parameters))
+		{
+			$errorInfo = $statement->errorInfo();
+			echo '<pre>';
+			var_dump($errorInfo);
+			echo '</pre>';
+
+			error_log('Query failed: ' . var_export($errorInfo, true));
+			return false;
+		}
+		$this->_lastQuery = $query . ' : ' . (is_array($parameters) ? implode($parameters, ', ') : 'no parameters');
 		return $statement->fetchAll(PDO::FETCH_CLASS, get_class($this->getModel()));
 	}
 
@@ -79,27 +90,31 @@ class db extends modelBuilder
 	public function add()
 	{
 		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-
-		$this->_database->add($this->_getTableNameFromModel(), $this->getModel(), $this->_getPrimaryKey());
+		return $this->_database->add($this->_getTableNameFromModel(), $this->getModel(), $this->_getPrimaryKey());
 	}
 
 	public function update()
 	{
 		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
 
-		$this->_database->update($this->_getTableNameFromModel(), $this->getModel(), $this->_getPrimaryKey());
+		return $this->_database->update($this->_getTableNameFromModel(), $this->getModel(), $this->_getPrimaryKey());
 	}
 
 	public function delete($id)
 	{
 		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
 
-		$this->_database->delete($this->_getTableNameFromModel(), $id, $this->_getPrimaryKey());
+		return $this->_database->delete($this->_getTableNameFromModel(), $id, $this->_getPrimaryKey());
 	}
 	
 	public function insertId()
 	{
 		return db::$_dbo->lastInsertId();
+	}
+
+	public function lastQuery()
+	{ 
+		return $this->_lastQuery;
 	}
 
 	public function setModel($model)

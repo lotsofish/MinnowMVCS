@@ -31,7 +31,7 @@ class mysql implements iDbAccess
 		$parameters = null;
 		if(is_numeric($where))
 		{
-			$this->_validatePrimaryKey($primaryKey);
+			$this->_validatePrimaryKey($primaryKey, $table);
 			$where = ' where `' . $primaryKey . '`=' . $where;
 		}
 		else if(is_array($where))
@@ -70,7 +70,7 @@ class mysql implements iDbAccess
 			}
 		}
 		$set = implode(',', $setArray);
-		$this->db->query('insert into `' . $table . '` set ' . $set, $parameters);
+		return $this->db->query('insert into `' . $table . '` set ' . $set, $parameters);
 	}
 
 	public function update($table, $model, $primaryKey)
@@ -89,13 +89,13 @@ class mysql implements iDbAccess
 			}
 		}
 		$set = implode(',', $setArray);
-		$this->db->query('update `' . $table . '` set ' . $set . ' where `' . $primaryKey . '`=' . db::getDbo()->quote($model->$primaryKey), $parameters);
+		return $this->db->query('update `' . $table . '` set ' . $set . ' where `' . $primaryKey . '`=' . db::getDbo()->quote($model->$primaryKey), $parameters);
 	}
 
 	public function delete($table, $id, $primaryKey)
 	{
 		$this->_validatePrimaryKey($primaryKey, $table);
-		$this->db->query('delete from `' . $table . '` where `' . $primaryKey . '`=?', array($id));
+		return $this->db->query('delete from `' . $table . '` where `' . $primaryKey . '`=?', array($id));
 	}
 
 	public function getPrimaryKey($tableName)

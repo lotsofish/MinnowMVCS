@@ -78,4 +78,15 @@ class model
 	{
 		return $this->_rawData[$propertyName];
 	}
+
+	public function populateFromPost()
+	{
+		foreach(get_object_vars($this) as $propertyName => $propertyValue)
+		{
+			if(isset($_POST[$propertyName])) 
+			{ 
+				$this->$propertyName = $_POST[$propertyName];
+			}
+		}
+	}
 }

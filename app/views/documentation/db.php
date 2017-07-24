@@ -48,9 +48,20 @@ $db->setModel('db/user');
 <p>
 Queries should use question marks in place of values, and pass in the values in an array. This uses PDO's prepared statements to prevent SQL injection attacks.
 </p>
+<p>
+The return value is a PDOStatement object.
+</p>
 
 <pre class="prettyprint">
-$data = $db->query('insert into user (username, email) values (?, ?)', array($value1, $value2));
+$db->query('insert into user (username, email) values (?, ?)', array($value1, $value2));
+</pre>
+
+<pre class="prettyprint">
+$users = $db->query('select * from user'); // get all users
+for($users as $user)
+{
+	echo $user->username . '&lt;br/&gt;';
+}
 </pre>
 
 <em>Select, Add, Update, Delete</em>

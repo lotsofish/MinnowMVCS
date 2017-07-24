@@ -44,3 +44,13 @@ $userModel = $this->core->loadModel('user');
 // loading a model in a subdirectory
 $userprofileModel = $this->core->loadModel('user/profile');
 </pre>
+
+<em>Loading a model from POST data</em>
+<p>You can fill a model from an HTTP POST by using the <strong>populateFromPost()</strong> method.</p>
+<pre class="prettyprint">
+&lt;?php
+// in controller - $_POST contains data
+$myModel = $this->core->loadModel('myModel');
+$myModel->populateFromPost();
+?&gt;
+</pre>

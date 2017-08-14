@@ -23,7 +23,7 @@
  *** app files can be placed outside of the public root for better security 
  **/
 
-$appLocation = 'app';
+$appLocation = __dir__ . '/app';
 
 /***
  *** array of files that will be automatically loaded

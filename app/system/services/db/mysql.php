@@ -82,7 +82,7 @@ class mysql implements iDbAccess
 
 		foreach(get_class_vars(get_class($model)) as $field => $value)
 		{
-			if($field != $this->_primaryKey)
+			if($field != $primaryKey)
 			{
 				array_push($setArray, '`' . $field . '`=?');
 				array_push($parameters, $model->$field);

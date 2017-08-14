@@ -10,24 +10,27 @@ class user extends modelBuilder
 	private $_config;
 	private $_db;
 
-	function constructor()
+	public function __construct($core)
 	{		
+		parent::__construct($core);
 		$this->_config = $this->getConfig();
-		$this->_db = $this->core->loadService('db', $this->getModel());
+		$this->_db = $this->core->loadService('db', 'user', 'user');
+
+		if(isset($_SESSION['userId']))
+		{
+			$this->_populateModelFromDb();
+		}
 	}
 
 	public function login($username, $password, $passwordHashed = false, $rememberCookie = false)
 	{
 		$password = $passwordHashed ? $password : $this->makePassword($password);
-		$user = $this->_db->select(array('username'=>$username, 'password'=>$password));
+		$user = $this->_db->select(array('username'=>$username, 'password'=>$password, 'verified'=>1));
 
 		if(count($user) > 0) 
 		{
 			$this->setModel($user[0]);
-			$_SESSION['username'] = $user[0]->username;
-			$_SESSION['email'] = $user[0]->email;
 			$_SESSION['userId'] = $user[0]->id;
-			$_SESSION['verified'] = $user[0]->verified;
 
 			if($this->_config->rememberCookie || $rememberCookie)
 			{
@@ -54,54 +57,47 @@ class user extends modelBuilder
 
 	public function createUser($username, $email, $password, $verified = 1)
 	{
-		$user = $this->core->loadModel('user');
-		$user->username = $username;
-		$user->email = $email;
-		$user->password = $this->makePassword($password);
-		$user->verified = $verified;
+		$usernameMatch = $this->_db->select(array('username'=>$username));
+		if(count($usernameMatch) > 0) { return false; }
 
-		$this->_db->setModel($user);
-		$this->_db->add();
+		$emailMatch = $this->_db->select(array('email'=>$email));
+		if(count($usernameMatch) > 0) { return false; }
+		
+		$this->username = $username;
+		$this->email = $email;
+		$this->password = $this->makePassword($password);
+		$this->verified = $verified;
+
+		$this->_db->add($this->getModel());
 
 		return $this->_db->insertId();
 	}
 
 	public function updateUser($id, $username, $email, $password, $verified = 1)
 	{
-		$user = $this->core->loadModel('user');
-		$user->id = $id;
-		$user->username = $username;
-		$user->email = $email;
-		$user->password = $this->makePassword($password);
-		$user->verified = $verified;
+		$this->id = $id;
+		$this->username = $username;
+		$this->email = $email;
+		$this->password = $this->makePassword($password);
+		$this->verified = $verified;
 
-		$this->_db->setModel($user);
-		$this->_db->update();
+		$this->_db->update($this->getModel());
 	}
 
 	public function isLoggedIn()
 	{
-		if(!$_SESSION['username'] && $_COOKIE['userSession'])
+		if(!isset($_SESSION['userId']) && isset($_COOKIE['userSession']))
 		{
 			$userSession = unserialize(base64_decode($_COOKIE['userSession']));
 			$this->login($userSession[0], $userSession[1], true);
 		}
-		return isset($_SESSION['username']) && $_SESSION['verified'];
+		return isset($_SESSION['userId']);
 	}
 
-	public function getUsername()
+	private function _populateModelFromDb()
 	{
-		return $_SESSION['username'];
-	}
-
-	public function getEmail()
-	{
-		return $_SESSION['email'];
-	}
-
-	public function getId()
-	{
-		return $_SESSION['userId'];
+		$user = $this->_db->select(array('id'=>$_SESSION['userId'], 'verified'=>1))[0];
+		$this->setModel($user);
 	}
 
 	private function makePassword($password)

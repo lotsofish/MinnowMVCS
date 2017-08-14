@@ -1,14 +1,14 @@
 <em>Including a Partial View</em>
 <p>
-	You can include content from another view file from within the current view, by calling $this->partial('viewFile', $model);
+	You can include content from another view file from within the current view, by calling $this->partial($model, 'viewFile');
 </p>
 <pre class="prettyprint">
 &lt;div&gt;
-	&lt;?= $this->partial('partialView', $model); ?&gt;
+	&lt;?= $this->partial($model, 'partialView'); ?&gt;
 &lt;/div&gt;
 
 &lt;div&gt;
-	&lt;?= $this->partial('partialView', $model->partialModel); // limit model in partial view to a property on this view's model ?&gt; 
+	&lt;?= $this->partial($model->partialModel, 'partialView'); // limit model in partial view to a property on this view's model ?&gt; 
 &lt;/div&gt;
 </pre>
 

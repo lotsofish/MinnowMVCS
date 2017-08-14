@@ -10,8 +10,9 @@ class user extends modelBuilder
 {
 	public const MODEL_NAME = 'userModel';
 
-	public constructor()
+	public __construct($core)
 	{
+		parent::__construct($core);
 		$this->load();
 	}
 
@@ -83,10 +84,4 @@ $userService->setModel($userModel);
 </p>
 <p>
 	<strong>Note: You cannot have public properties on your service object if it extends modelBuilder.</strong>
-</p>
-
-<em>constructor() instead of __construct()</em>
-<p>
-	If you need to define a constructor for your service, <strong>and it extends modelBuilder</strong>, you must use the name constructor() instead of the default __construct().
-	This is necessary to keep constructor parameters defined as you normally would. You do not have to call parent::__construct() from constructor().
 </p>

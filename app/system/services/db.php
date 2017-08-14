@@ -18,16 +18,18 @@
  ***********************************************************************/
 
 
-class db extends modelBuilder
+class db extends service
 {
 	use configurable;
 	private static $_dbo;
 	private $_database;
 	private $_primaryKey;
 	private $_lastQuery;
+	private $_model;
 
-	public function constructor($model=null)
+	public function __construct($core, $modelName, $tableName = null)
 	{
+		parent::__construct($core);
 		require_once 'db/iDbAccess.php';
 		require_once 'db/mysql.php';
 		
@@ -49,10 +51,11 @@ class db extends modelBuilder
 				throw new Exception('DB ' . $dbType . ' not implemented.');
 		}
 
-
-		if($model != null)
+		$this->_tableName = $tableName;
+		$this->_modelName = $this->_getModelName($modelName);
+		if(!class_exists($this->_modelName))
 		{
-			$this->setModel($model);
+			$this->core->loadModel($modelName);
 		}
 	}
 
@@ -63,8 +66,6 @@ class db extends modelBuilder
 
 	public function query($query, $parameters=null)
 	{
-		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-
 		$statement = db::$_dbo->prepare($query);
 		if(!$statement->execute($parameters))
 		{
@@ -77,34 +78,31 @@ class db extends modelBuilder
 			return false;
 		}
 		$this->_lastQuery = $query . ' : ' . (is_array($parameters) ? implode($parameters, ', ') : 'no parameters');
-		return $statement->fetchAll(PDO::FETCH_CLASS, get_class($this->getModel()));
+		return $statement->fetchAll(PDO::FETCH_CLASS, $this->_modelName);
 	}
 
 	public function select($where = null)
 	{
-		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-
-		return $this->_database->select($this->_getTableNameFromModel(), $this->_getPrimaryKey(), $where);
+		if($this->_tableName == null) { throw new Exception('Table name is not set.'); }
+		return $this->_database->select($this->_tableName, $this->_getPrimaryKey(), $where);
 	}
 
-	public function add()
+	public function add($object)
 	{
-		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-		return $this->_database->add($this->_getTableNameFromModel(), $this->getModel(), $this->_getPrimaryKey());
+		if($this->_tableName == null) { throw new Exception('Table name is not set.'); }
+		return $this->_database->add($this->_tableName, $object, $this->_getPrimaryKey());
 	}
 
-	public function update()
+	public function update($object)
 	{
-		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-
-		return $this->_database->update($this->_getTableNameFromModel(), $this->getModel(), $this->_getPrimaryKey());
+		if($this->_tableName == null) { throw new Exception('Table name is not set.'); }
+		return $this->_database->update($this->_tableName, $object, $this->_getPrimaryKey());
 	}
 
 	public function delete($id)
 	{
-		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-
-		return $this->_database->delete($this->_getTableNameFromModel(), $id, $this->_getPrimaryKey());
+		if($this->_tableName == null) { throw new Exception('Table name is not set.'); }
+		return $this->_database->delete($this->_tableName, $id, $this->_getPrimaryKey());
 	}
 	
 	public function insertId()
@@ -117,12 +115,6 @@ class db extends modelBuilder
 		return $this->_lastQuery;
 	}
 
-	public function setModel($model)
-	{
-		parent::setModel($model);
-		$this->_primaryKey = null;
-	}
-
 	private function _getPrimaryKey()
 	{
 		if($this->_primaryKey != null)
@@ -131,14 +123,14 @@ class db extends modelBuilder
 		}
 		else
 		{
-			return $this->_primaryKey = $this->_database->getPrimaryKey($this->_getTableNameFromModel());
+			return $this->_primaryKey = $this->_database->getPrimaryKey($this->_tableName);
 		}
 	}
 
-	private function _getTableNameFromModel()
-	{
-		if(!$this->isModelSet()) { throw new Exception('Model is not set.'); }
-
-		return preg_replace('/^(db)?(.*)Model$/', '$2', get_class($this->getModel()));
+	private function _getModelName($model)
+	{		
+		$modelName = str_replace('/', '', $model);
+		$modelName .= 'Model';
+		return $modelName;
 	}
 }

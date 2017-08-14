@@ -17,23 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************/
 
-class modelBuilder
+class modelBuilder extends service
 {
-	public $core;
 	private $_modelInstance;
 
-	final public function __construct($core, $args=array())
-	{
-		$this->core = $core;
-
+	public function __construct($core)
+	{		
+		parent::__construct($core);
+	
 		if(defined('static::MODEL_NAME'))
 		{
 			$this->setModel(static::MODEL_NAME);
-		}
-
-		if(method_exists($this, 'constructor'))
-		{
-			call_user_func_array(array($this, 'constructor'), $args);
 		}
 	}
 

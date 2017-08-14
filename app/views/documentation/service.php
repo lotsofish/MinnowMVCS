@@ -7,12 +7,13 @@
 &lt;?php
 // file - app/services/user.php
 
-class user
+class user extends service
 {
 	private $username; 
 
-	public __construct($username='')
+	public __construct($core, $username='')
 	{
+		parent::__construct($core);
 		$this->username = $username;
 	}
 
@@ -22,6 +23,10 @@ class user
 	}
 }
 </pre>
+
+<em>Constructor</em>
+<p>Your service should extend the service class. If you need a constructor in your service, use the standard __construct name accepting $core as the first argument. Call parent::__construct($core); on the first line of your constructor.
+</p>
 
 <em>Instantiate a service</em>
 <p>
@@ -37,6 +42,4 @@ $userService = $this->core->loadService('user');
 </p>
 <pre class="prettyprint">
 $userService = $this->core->loadService('user', 'johndoe');
-// equivalent to
-$userService = new user('johndoe');
 </pre>

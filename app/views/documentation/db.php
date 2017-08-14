@@ -22,13 +22,12 @@ $dbConfig = array(
 
 <em>DB Model</em>
 <p>
-	Database models are just like any other model you will define. They should be placed in the app/models/db folder. The class name should be db{yourTableName}Model.
+	Database models are just like any other model you will define. The db service does not use the modelBuilder class, but it will return model objects from it's methods.
 </p>
 
 <em>Instantiating a DB class object</em>
 <p>
-You can instantiate a new db object by calling loadService. The first parameter is 'db', and the second parameter is the path to the model you are using. 
-The model is optional and can be set later by calling setModel(), but there must be a model set that models the data returned before calling any methods that return data.
+You can instantiate a new db object by calling loadService. The first parameter is the service name: 'db', the second parameter is the table you are working with, and the third parameter is the path to the model you are using. The tableName parameter is optional. If not supplied, you will only be able to use the query() method.
 </p>
 
 <p>
@@ -36,12 +35,7 @@ The PDO object is static and reused for all db instances, so working with multip
 </p>
 
 <pre class="prettyprint">
-$db = $this->core->loadService('db', 'db/user');
-
-// ...
-
-$db = $this->core->loadService('db');
-$db->setModel('db/user');
+$db = $this->core->loadService('db', 'user', db/user');
 </pre>
 
 <em>Sending SQL to the DB</em>
@@ -66,12 +60,11 @@ for($users as $user)
 
 <em>Select, Add, Update, Delete</em>
 <p>
-If you are working with a single table that defines a primary key (autoincrement field), you can use the select, add, update and delete methods to simplify data access. 
-The table name is automatically derived from the model name, so naming your model db{tableName}Model is important if you are using these methods.
+If you are working with a single table that defines a primary key (autoincrement field) and pass the table name to the db service's loadService call, you can use the select, add, update and delete methods to simplify data access. 
 </p>
 
 <pre class="prettyprint">
-$db = $this->core->loadService('db', 'db/user');
+$db = $this->core->loadService('db', 'user', 'db/user');
 $data = $db->select($id); // $id == primary key value
 $users = $db->select(); // select all users
 $usersNamedJoe = $db->select(array('name'=>'joe')); // select * from user where name = 'joe';

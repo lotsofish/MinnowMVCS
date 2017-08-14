@@ -36,12 +36,7 @@ class view
 	{		
 		$this->_model = $model->htmlEncoded();
 
-		if($viewFile == '')
-		{
-			$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-			$this->_viewFile = preg_replace('/Controller$/', '', $backtrace['class']) . '/' . $backtrace['function'];
-		}
-		else
+		if($viewFile != '')
 		{
 			$this->_viewFile = $viewFile;
 		}
@@ -88,10 +83,10 @@ class view
 		require $this->core->rootDir() . '/views/templates/' . $this->_template . '.php';
 	}
 
-	public function partial($viewFile, $model)
+	public function partial($model, $viewFile)
 	{
 		$partial = new partialView($this->core);
-		return $partial->load($viewFile, $model);
+		return $partial->include($model, $viewFile);
 	}
 
 	protected function _getViewContent()

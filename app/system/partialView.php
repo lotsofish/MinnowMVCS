@@ -24,13 +24,15 @@ class partialView extends view
 		parent::__construct($core);
 	}
 
-	public function load($viewFile, $model)
+	public function include($model, $viewFile)
 	{		
 		$this->_model = $model;
 		$this->_viewFile = $viewFile;
 		
 		return $this->_getViewContent();		
 	}
+
+	public function load($model, $viewFile='') { throw new Exception('Not implemented for partial view.'); }
 
 	public function show() { throw new Exception('Not implemented for partial view.'); }
 	

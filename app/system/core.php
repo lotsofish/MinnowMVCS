@@ -30,6 +30,7 @@ class core
 		require_once 'model.php';
 		require_once 'view.php';
 		require_once 'partialView.php';
+		require_once 'service.php';
 		require_once 'modelBuilder.php';
 		require_once 'configurable.php';
 
@@ -41,7 +42,7 @@ class core
 		{
 			foreach($autoLoadLibraries as $libraryFile)
 			{
-				$this->_requireFile('library/' . $libraryFile);
+				$this->loadLibrary($libraryFile);
 			}
 		}
 	}
@@ -81,7 +82,12 @@ class core
 		$this->_requireFile('services/' . $serviceName);
 		$args = func_get_args();
 		array_shift($args);
-		return new $serviceName($this, $args);
+		return new $serviceName($this, ...$args);
+	}
+
+	public function loadLibrary($libraryName)
+	{
+		$this->_requireFile('library/' . $libraryName);
 	}
 
 	public function rootDir() { return $this->_rootDir; }

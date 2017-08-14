@@ -84,7 +84,7 @@ class core
 		array_shift($args);
 		array_unshift($args, $this);
 		$instance = new ReflectionClass($serviceName);
-		return $instance->newInstanceArgs($this, $args);
+		return $instance->newInstanceArgs($args);
 	}
 
 	public function loadLibrary($libraryName)

@@ -23,8 +23,10 @@ class example extends modelBuilder
 
 	const MODEL_NAME = 'exampleModel';
 
-	public function constructor()
+	public function __construct($core)
 	{
+		parent::__construct($core);
+		
 		// service constructor
 		$this->getData();
 	}

@@ -82,7 +82,9 @@ class core
 		$this->_requireFile('services/' . $serviceName);
 		$args = func_get_args();
 		array_shift($args);
-		return new $serviceName($this, ...$args);
+		array_unshift($args, $this);
+		$instance = new ReflectionClass($serviceName);
+		return $instance->newInstanceArgs($this, $args);
 	}
 
 	public function loadLibrary($libraryName)

@@ -86,7 +86,7 @@ class view
 	public function partial($model, $viewFile)
 	{
 		$partial = new partialView($this->core);
-		return $partial->include($model, $viewFile);
+		return $partial->get($model, $viewFile);
 	}
 
 	protected function _getViewContent()

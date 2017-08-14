@@ -24,7 +24,7 @@ class partialView extends view
 		parent::__construct($core);
 	}
 
-	public function include($model, $viewFile)
+	public function get($model, $viewFile)
 	{		
 		$this->_model = $model;
 		$this->_viewFile = $viewFile;

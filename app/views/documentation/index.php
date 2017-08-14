@@ -40,6 +40,22 @@
 <em>Version Info</em>
 <ul>
 	<li>
+		<em>0.14 - August 13, 2017</em>
+		<p>Many updates and improvements to modelBuilder, service, db. Minor bug fixes.</p>
+	</li>
+	<li>
+		<em>0.13 - July 24, 2017</em>
+		<p>Add populateFromPost() model method and DB updates</p>
+	</li>
+	<li>
+		<em>0.12 - December 14, 2016</em>
+		<p>Add user login service</p>
+	</li>
+	<li>
+		<em>0.11 - Februrary 6, 2016</em>
+		<p>Bug fixes for HTML encoding view models</p>
+	</li>
+	<li>
 		<em>0.1 - September 25, 2015</em>
 		<p>Initial release. Code should be usable, but new.</p>
 	</li>

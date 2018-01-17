@@ -1,6 +1,6 @@
 <?php
 /***********************************************************************
-    Copyright (C) 2015 Andrew Rinderknecht
+    Copyright (C) 2018 Andrew Rinderknecht
     https://github.com/lotsofish/MinnowMVCS
 
     This program is free software: you can redistribute it and/or modify

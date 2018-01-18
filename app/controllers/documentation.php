@@ -29,6 +29,11 @@ class documentationController extends controller
 		$this->view->template('documentation')->title('Controller')->show();
 	}
 
+	public function api()
+	{
+		$this->view->template('documentation')->title('API')->show();
+	}
+
 	public function routing()
 	{
 		$this->view->template('documentation')->title('Routing')->show();

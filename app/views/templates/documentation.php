@@ -62,6 +62,7 @@ nav ul { list-style: none; padding: 0; margin: 0; }
 		<ul>
 			<li><a href="/documentation/index">Documentation Home</a></li>
 			<li><a href="/documentation/controller">Controller</a></li>
+			<li><a href="/documentation/api">API</a></li>
 			<li><a href="/documentation/routing">Routing</a></li>
 			<li><a href="/documentation/model">Model</a></li>
 			<li><a href="/documentation/view">View</a></li>

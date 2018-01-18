@@ -27,6 +27,7 @@ class core
 
 		// load required classes
 		require_once 'controller.php';
+		require_once 'api.php';
 		require_once 'model.php';
 		require_once 'view.php';
 		require_once 'partialView.php';
@@ -60,7 +61,14 @@ class core
 		$controller = new $controllerClass($this);
 		if(method_exists($controller, $methodName))
 		{
-			call_user_func_array(array($controller, $methodName), $options);
+			if(is_a($controller, 'api'))
+			{
+				echo api::serialize(call_user_func_array(array($controller, $methodName), $options));
+			}
+			else
+			{
+				call_user_func_array(array($controller, $methodName), $options);
+			}
 		}
 		else
 		{
